@@ -1,0 +1,26 @@
+package com.yl.musinsa.service;
+
+import com.yl.musinsa.entity.Brand;
+import com.yl.musinsa.exception.MusinsaException;
+import com.yl.musinsa.repository.BrandRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+@Service
+@RequiredArgsConstructor
+@Transactional(readOnly = true)
+public class BrandService {
+    
+    private final BrandRepository brandRepository;
+    
+    @Transactional
+    public Brand registerBrand(String name, String description) {
+        if (brandRepository.existsByName(name)) {
+            throw MusinsaException.duplicateName(name);
+        }
+        
+        Brand brand = Brand.create(name, description);
+        return brandRepository.save(brand);
+    }
+}

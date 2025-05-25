@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>브랜드 등록</title>
+</head>
+<body>
+    <h1>브랜드 등록</h1>
+    
+    <div th:if="${message}">
+        <p th:text="${message}"></p>
+    </div>
+    
+    <div th:if="${error}">
+        <p th:text="${error}"></p>
+    </div>
+    
+    <!-- 등록 폼 -->
+    <form method="post" action="/admin/brands/register">
+        <table>
+            <tr>
+                <td>브랜드명:</td>
+                <td><input type="text" name="name" th:value="${name}" required /></td>
+            </tr>
+            <tr>
+                <td>설명:</td>
+                <td><textarea name="description" th:text="${description}"></textarea></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><input type="submit" value="등록" /></td>
+            </tr>
+        </table>
+    </form>
+    
+    <hr>
+    
+    <h2>등록된 브랜드 목록</h2>
+    <table border="1">
+        <tr>
+            <th>ID</th>
+            <th>브랜드명</th>
+            <th>설명</th>
+        </tr>
+        <tr th:each="brand : ${brands}">
+            <td th:text="${brand.id}"></td>
+            <td th:text="${brand.name}"></td>
+            <td th:text="${brand.description}"></td>
+        </tr>
+    </table>
+    
+</body>
+</html>

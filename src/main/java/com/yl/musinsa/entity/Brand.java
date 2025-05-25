@@ -23,6 +23,13 @@ public class Brand extends BaseEntity {
     @Column(nullable = false, unique = true)
     private String name;
     
-    @Column(name = "description")
+    @Column
     private String description;
+
+    public static Brand create(String name, String description) {
+        Brand brand = new Brand();
+        brand.name = name;
+        brand.description = description;
+        return brand;
+    }
 }

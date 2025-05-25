@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -31,7 +32,7 @@ public class ProductService {
                 .collect(Collectors.groupingBy(Product::getBrand));
 
         return brands.stream()
-                .map(it -> BrandCategoryResponse.of(it, brandProducts.get(it)))
+                .map(it -> BrandCategoryResponse.of(it, brandProducts.getOrDefault(it, new ArrayList<>())))
                 .toList();
     }
 }

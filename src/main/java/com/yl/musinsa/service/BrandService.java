@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -22,5 +24,12 @@ public class BrandService {
         
         Brand brand = Brand.create(name, description);
         return brandRepository.save(brand);
+    }
+    
+    /**
+     * 모든 브랜드 조회
+     */
+    public List<Brand> getAllBrands() {
+        return brandRepository.findAll();
     }
 }

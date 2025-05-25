@@ -9,7 +9,7 @@ import java.util.Collection;
 import java.util.List;
 
 @Repository
-public interface ProductRepository extends JpaRepository<Product, Long>, ProductRepositoryCustom {
+public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findByBrandInOrderByBrand_NameAsc(Collection<Brand> brands);
 
 }

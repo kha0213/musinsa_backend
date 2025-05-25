@@ -42,4 +42,13 @@ public class Product extends BaseEntity {
     
     @Column
     private String name;
+    
+    public static Product create(Brand brand, Category category, BigDecimal price, String name) {
+        Product product = new Product();
+        product.brand = brand;
+        product.category = category;
+        product.price = price;
+        product.name = name;
+        return product;
+    }
 }

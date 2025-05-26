@@ -1,6 +1,7 @@
 package com.yl.musinsa.service;
 
 import com.yl.musinsa.entity.Brand;
+import com.yl.musinsa.exception.ErrorCode;
 import com.yl.musinsa.exception.MusinsaException;
 import com.yl.musinsa.repository.BrandRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +20,7 @@ public class BrandService {
     @Transactional
     public Brand registerBrand(String name, String description) {
         if (brandRepository.existsByName(name)) {
-            throw MusinsaException.duplicateName(name);
+            throw new MusinsaException(ErrorCode.DUPLICATE_NAME);
         }
         
         Brand brand = Brand.create(name, description);

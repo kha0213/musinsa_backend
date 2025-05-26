@@ -51,4 +51,9 @@ public class Product extends BaseEntity {
         product.name = name;
         return product;
     }
+
+    public void update(String name, BigDecimal price) {
+        this.name = name;
+        this.price = price;
+    }
 }

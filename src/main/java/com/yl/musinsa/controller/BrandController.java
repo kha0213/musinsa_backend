@@ -19,7 +19,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/brands")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:3000")
 public class BrandController {
     
     private final BrandService brandService;

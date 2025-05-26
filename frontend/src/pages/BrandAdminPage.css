@@ -16,41 +16,6 @@
   margin-top: 10px;
 }
 
-.btn {
-  padding: 8px 16px;
-  margin-right: 10px;
-  border: 1px solid #ccc;
-  background: #f9f9f9;
-  cursor: pointer;
-}
-
-.btn-primary {
-  background: #007bff;
-  color: white;
-  border-color: #007bff;
-}
-
-.btn-secondary {
-  background: #6c757d;
-  color: white;
-  border-color: #6c757d;
-}
-
-.btn-danger {
-  background: #dc3545;
-  color: white;
-  border-color: #dc3545;
-}
-
-.btn:hover {
-  opacity: 0.8;
-}
-
-.btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
 .add-brand-form {
   margin-bottom: 30px;
   padding: 20px;

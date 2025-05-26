@@ -33,7 +33,9 @@ public class ProductController {
         return "상품이 성공적으로 저장되었습니다.";
     }
 
-
+    /**
+     * 모든 카테고리에서 가장 저렴한 브랜드의 상품 가져오기 
+     */
     @GetMapping("/category/brand-low-price")
     public LowPriceResponse getLowPriceBrand() {
         List<LowPriceDto> list = productService.findByLowPriceCategoryBrand();

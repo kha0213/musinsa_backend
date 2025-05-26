@@ -25,7 +25,6 @@ repositories {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     
@@ -65,4 +64,32 @@ sourceSets {
 // gradle clean 시에 QClass 디렉토리 삭제
 clean {
     delete file(generated)
+    delete file('frontend/build') // React 빌드 폴더도 삭제
 }
+
+// React 빌드 태스크들
+task installDependencies(type: Exec) {
+    workingDir 'frontend'
+    commandLine 'yarn', 'install'
+}
+
+task buildFrontend(type: Exec) {
+    dependsOn installDependencies
+    workingDir 'frontend'
+    commandLine 'yarn', 'build'
+}
+
+// 개발용: 프론트엔드 개발 서버 시작
+task startFrontend(type: Exec) {
+    workingDir 'frontend'
+    commandLine 'yarn', 'start'
+}
+
+task copyFrontend(type: Copy) {
+    dependsOn buildFrontend
+    from 'frontend/build'
+    into 'src/main/resources/static'
+}
+
+// 빌드 시 프론트엔드 포함
+build.dependsOn copyFrontend

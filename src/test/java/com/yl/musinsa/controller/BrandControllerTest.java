@@ -3,7 +3,6 @@ package com.yl.musinsa.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yl.musinsa.config.JpaAuditingConfig;
 import com.yl.musinsa.config.QueryDslConfig;
-import com.yl.musinsa.controller.api.BrandApiController;
 import com.yl.musinsa.entity.Brand;
 import com.yl.musinsa.service.BrandService;
 import org.junit.jupiter.api.DisplayName;
@@ -20,10 +19,13 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(controllers = BrandApiController.class,
+@WebMvcTest(controllers = BrandController.class,
            excludeFilters = {
                @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {
                    QueryDslConfig.class,
@@ -31,7 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
                })
            })
 @DisplayName("BrandApiController 테스트")
-class BrandApiControllerTest {
+class BrandControllerTest {
 
     @Autowired
     private MockMvc mockMvc;

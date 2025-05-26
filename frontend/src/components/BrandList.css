@@ -1,0 +1,48 @@
+.brand-list {
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.brand-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.brand-table th {
+  background-color: #f8f9fa;
+  padding: 12px;
+  text-align: left;
+  font-weight: bold;
+  color: #333;
+  border-bottom: 2px solid #dee2e6;
+}
+
+.brand-table td {
+  padding: 12px;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.brand-table tr:hover {
+  background-color: #f8f9fa;
+}
+
+.brand-table .brand-name {
+  font-weight: bold;
+  color: #007bff;
+}
+
+.no-data {
+  text-align: center;
+  color: #6c757d;
+  font-style: italic;
+  padding: 30px !important;
+}
+
+.loading {
+  text-align: center;
+  padding: 30px;
+  color: #6c757d;
+  font-style: italic;
+}

@@ -1,46 +1,47 @@
 package com.yl.musinsa.exception;
 
-import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
- * 전역 예외 처리 핸들러
+ * 전역 예외 처리 핸들러 (API 응답용)
  */
-@ControllerAdvice
+@RestControllerAdvice
 public class GlobalExceptionHandler {
     
     @ExceptionHandler(MusinsaException.class)
-    public String handleMusinsaException(MusinsaException e, 
-                                       RedirectAttributes redirectAttributes,
-                                       HttpServletRequest request) {
+    public ResponseEntity<Map<String, Object>> handleMusinsaException(MusinsaException e) {
+        Map<String, Object> errorResponse = new HashMap<>();
+        errorResponse.put("success", false);
+        errorResponse.put("error", e.getMessage());
+        errorResponse.put("code", e.getClass().getSimpleName());
         
-        redirectAttributes.addFlashAttribute("error", e.getMessage());
-        
-        // 이전 페이지 있다면 해당 URL로 리다이렉트
-        String referer = request.getHeader("Referer");
-        if (referer != null && !referer.isEmpty()) {
-            return "redirect:" + referer;
-        }
-        
-        return "redirect:/";
+        return ResponseEntity.badRequest().body(errorResponse);
     }
     
     @ExceptionHandler(BindException.class)
-    public String handleBindException(BindException e,
-                                    RedirectAttributes redirectAttributes,
-                                    HttpServletRequest request) {
+    public ResponseEntity<Map<String, Object>> handleBindException(BindException e) {
+        Map<String, Object> errorResponse = new HashMap<>();
+        errorResponse.put("success", false);
+        errorResponse.put("error", e.getBindingResult().getFieldError().getDefaultMessage());
+        errorResponse.put("code", "VALIDATION_ERROR");
         
-        String errorMessage = e.getBindingResult().getFieldError().getDefaultMessage();
-        redirectAttributes.addFlashAttribute("error", errorMessage);
+        return ResponseEntity.badRequest().body(errorResponse);
+    }
+    
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<Map<String, Object>> handleGenericException(Exception e) {
+        Map<String, Object> errorResponse = new HashMap<>();
+        errorResponse.put("success", false);
+        errorResponse.put("error", "서버 내부 오류가 발생했습니다.");
+        errorResponse.put("code", "INTERNAL_SERVER_ERROR");
         
-        String referer = request.getHeader("Referer");
-        if (referer != null && !referer.isEmpty()) {
-            return "redirect:" + referer;
-        }
-        
-        return "redirect:/";
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
     }
 }

@@ -1,17 +1,19 @@
 package com.yl.musinsa.repository;
 
-import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Projections;
-import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.yl.musinsa.dto.LowPriceDto;
+import com.yl.musinsa.entity.QProduct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.util.List;
 
+import static com.yl.musinsa.entity.QBrand.brand;
+import static com.yl.musinsa.entity.QCategory.category;
 import static com.yl.musinsa.entity.QProduct.product;
 
 @Repository
@@ -23,9 +25,11 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
      * 각 카테고리별 최소 금액 가진 브랜드의 상품을 찾는 메서드
      */
     public List<LowPriceDto> findByLowPriceCategoryBrand() {
-        JPQLQuery<Tuple> subQuery = JPAExpressions
-                .select(product.category, product.price.min())
-                .groupBy(product.category);
+        QProduct subProduct = new QProduct("subProduct");
+        JPQLQuery<BigDecimal> minPriceSubQuery = JPAExpressions
+                .select(subProduct.price.min())
+                .from(subProduct)
+                .where(subProduct.category.id.eq(product.category.id));
 
         return queryFactory
                 .select(Projections.bean(LowPriceDto.class,
@@ -37,10 +41,9 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                         product.price
                 ))
                 .from(product)
-                .where(
-                    Expressions.list(product.category, product.price)
-                        .in(subQuery)
-                )
+                .join(product.category, category)
+                .join(product.brand, brand)
+                .where(product.price.eq(minPriceSubQuery))
                 .fetch();
     }
 }

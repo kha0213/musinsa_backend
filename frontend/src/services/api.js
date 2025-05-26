@@ -54,6 +54,10 @@ export const productService = {
   // 브랜드별 상품 조회 (관리용)
   getProductsByBrand: (brandId) => 
     api.get(`/products/brand/${brandId}`),
+    
+  // 카테고리별 최저가격 브랜드와 상품가격 조회
+  getCategoryLowPriceBrands: () =>
+    api.get('/products/category/brand-low-price'),
 };
 
 export const categoryService = {

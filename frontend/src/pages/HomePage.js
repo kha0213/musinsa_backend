@@ -53,6 +53,12 @@ const HomePage = () => {
           >
             상품 관리
           </button>
+          <button 
+            className="btn btn-info"
+            onClick={() => navigate('/category-low-price')}
+          >
+            카테고리별 최저가 조회
+          </button>
         </div>
       </div>
       

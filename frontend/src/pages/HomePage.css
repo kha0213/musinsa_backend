@@ -59,6 +59,15 @@
   background-color: #545b62;
 }
 
+.btn-info {
+  background-color: #17a2b8;
+  color: white;
+}
+
+.btn-info:hover {
+  background-color: #138496;
+}
+
 .table-container {
   overflow-x: auto;
   margin-bottom: 30px;

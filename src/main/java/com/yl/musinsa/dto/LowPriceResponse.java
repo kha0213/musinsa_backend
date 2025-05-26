@@ -7,6 +7,6 @@ import java.util.List;
 
 @Value
 public class LowPriceResponse {
-    List<LowPriceDto> lowPrices;
-    BigDecimal lowPriceSum;
+    List<LowPriceDto> categoryLowPrices;
+    BigDecimal totalPrice;
 }

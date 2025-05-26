@@ -1,6 +1,7 @@
 package com.yl.musinsa.service;
 
 import com.yl.musinsa.dto.BrandCategoryResponse;
+import com.yl.musinsa.dto.LowPriceDto;
 import com.yl.musinsa.dto.ProductSaveRequest;
 import com.yl.musinsa.entity.Brand;
 import com.yl.musinsa.entity.Category;
@@ -67,5 +68,9 @@ public class ProductService {
                 savedProduct.update(request.getPrice());
             }
         }
+    }
+
+    public List<LowPriceDto> findByLowPriceCategoryBrand() {
+        return productRepository.findByLowPriceCategoryBrand();
     }
 }

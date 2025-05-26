@@ -61,10 +61,10 @@ public class ProductService {
             Product savedProduct = categoryProductMap.get(request.getCategoryId());
 
             if (savedProduct == null) {
-                Product product = Product.create(brand, category, request.getPrice(), request.getProductName());
+                Product product = Product.create(brand, category, request.getPrice());
                 productRepository.save(product);
             } else {
-                savedProduct.update(request.getProductName(), request.getPrice());
+                savedProduct.update(request.getPrice());
             }
         }
     }

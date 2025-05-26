@@ -9,9 +9,8 @@ import java.math.BigDecimal;
 public class ProductDto {
     Long id;
     BigDecimal price;
-    String name;
 
     public static ProductDto of(Product product) {
-        return of(product.getId(), product.getPrice(), product.getName());
+        return of(product.getId(), product.getPrice());
     }
 }

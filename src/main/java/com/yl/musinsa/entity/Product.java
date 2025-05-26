@@ -39,21 +39,16 @@ public class Product extends BaseEntity {
     
     @Column(nullable = false, precision = 10)
     private BigDecimal price;
-    
-    @Column
-    private String name;
-    
-    public static Product create(Brand brand, Category category, BigDecimal price, String name) {
+
+    public static Product create(Brand brand, Category category, BigDecimal price) {
         Product product = new Product();
         product.brand = brand;
         product.category = category;
         product.price = price;
-        product.name = name;
         return product;
     }
 
-    public void update(String name, BigDecimal price) {
-        this.name = name;
+    public void update(BigDecimal price) {
         this.price = price;
     }
 }

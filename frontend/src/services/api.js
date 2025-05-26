@@ -46,4 +46,14 @@ export const homeService = {
   getBrandCategories: () => api.get('/home/brand-categories'),
 };
 
+export const productService = {
+  // 브랜드별 상품 저장
+  saveProductsByBrand: (brandId, products) => 
+    api.post(`/products/brand/${brandId}`, products),
+  
+  // 브랜드별 상품 조회 (관리용)
+  getProductsByBrand: (brandId) => 
+    api.get(`/products/brand/${brandId}`),
+};
+
 export default api;

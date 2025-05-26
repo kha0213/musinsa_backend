@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { homeService } from '../services/api';
 import './HomePage.css';
 
 const HomePage = () => {
+  const navigate = useNavigate();
   const [brandCategories, setBrandCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -33,8 +35,26 @@ const HomePage = () => {
 
   return (
     <div className="home-page">
-      <h1>무신사 스토어</h1>
-      <p>준비된 데이터는 다음과 같습니다.</p>
+      <div className="header">
+        <div className="title-section">
+          <h1>무신사 스토어</h1>
+          <p>준비된 데이터는 다음과 같습니다.</p>
+        </div>
+        <div className="header-buttons">
+          <button 
+            className="btn btn-primary"
+            onClick={() => navigate('/admin/brands')}
+          >
+            브랜드 관리
+          </button>
+          <button 
+            className="btn btn-secondary"
+            onClick={() => navigate('/admin/products')}
+          >
+            상품 관리
+          </button>
+        </div>
+      </div>
       
       <div className="table-container">
         <table className="brand-table">
@@ -63,10 +83,6 @@ const HomePage = () => {
             ))}
           </tbody>
         </table>
-      </div>
-      
-      <div className="navigation">
-        <a href="/admin/brands" className="admin-link">브랜드 관리</a>
       </div>
     </div>
   );

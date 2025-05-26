@@ -16,7 +16,5 @@ import java.math.BigDecimal;
 public class ProductSaveRequest {
     @NotNull
     private Long categoryId;
-    @NotNull
-    private String productName;
     private BigDecimal price;
 }

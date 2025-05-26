@@ -35,4 +35,10 @@ public class Category extends BaseEntity {
 
     @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
     private List<Product> products = new ArrayList<>();
+
+    public static Category create(String name) {
+        Category category = new Category();
+        category.name = name;
+        return category;
+    }
 }

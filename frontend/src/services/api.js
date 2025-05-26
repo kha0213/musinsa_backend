@@ -56,4 +56,9 @@ export const productService = {
     api.get(`/products/brand/${brandId}`),
 };
 
+export const categoryService = {
+  // 모든 카테고리 조회
+  getAllCategories: () => api.get('/categories'),
+};
+
 export default api;

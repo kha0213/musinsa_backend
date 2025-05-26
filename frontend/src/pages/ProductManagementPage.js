@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { brandService, productService, homeService } from '../services/api';
+import { brandService, productService, homeService, categoryService } from '../services/api';
 import './ProductManagementPage.css';
 
 const ProductManagementPage = () => {
   const navigate = useNavigate();
   const [brands, setBrands] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [brandCategories, setBrandCategories] = useState([]);
   const [productInputs, setProductInputs] = useState({});
   const [loading, setLoading] = useState(true);
@@ -19,43 +20,47 @@ const ProductManagementPage = () => {
   const loadData = async () => {
     try {
       setLoading(true);
-      const [brandsResponse, categoriesResponse] = await Promise.all([
+      setError(null);
+      
+      console.log('Loading data...');
+      
+      const [brandsResponse, categoriesResponse, homeResponse] = await Promise.all([
         brandService.getAllBrands(),
+        categoryService.getAllCategories(),
         homeService.getBrandCategories()
       ]);
       
-      setBrands(brandsResponse.data);
-      setBrandCategories(categoriesResponse.data);
+      console.log('Brands:', brandsResponse.data);
+      console.log('Categories:', categoriesResponse.data);
+      console.log('Home data:', homeResponse.data);
       
-      // 각 브랜드별로 상품 데이터를 개별 조회
+      setBrands(brandsResponse.data || []);
+      setCategories(categoriesResponse.data || []);
+      setBrandCategories(homeResponse.data || []);
+      
+      // 기존 상품 데이터를 input에 초기화 (홈 데이터에서 추출)
       const initialInputs = {};
-      
-      // 모든 브랜드에 대해 상품 데이터 로드
-      for (const brandCategory of categoriesResponse.data) {
-        try {
-          const productResponse = await productService.getProductsByBrand(brandCategory.brandId);
-          const products = productResponse.data;
+      (homeResponse.data || []).forEach(brandCategory => {
+        const brandId = brandCategory.brandId;
+        (brandCategory.categoryProducts || []).forEach(categoryProduct => {
+          const categoryId = categoryProduct.category?.id;
+          const price = categoryProduct.product?.price;
           
-          // 상품 데이터를 input에 설정
-          products.forEach(product => {
-            if (product.price) {
-              const key = `${product.brandId}-${product.categoryId}`;
-              initialInputs[key] = {
-                price: product.price.toString()
-              };
-            }
-          });
-        } catch (err) {
-          console.log(`브랜드 ${brandCategory.brandId}의 상품 데이터 로드 실패:`, err);
-          // 개별 브랜드 오류는 무시하고 계속
-        }
-      }
+          if (price && categoryId) {
+            const key = `${brandId}-${categoryId}`;
+            initialInputs[key] = {
+              price: price.toString()
+            };
+          }
+        });
+      });
       
+      console.log('Initial inputs:', initialInputs);
       setProductInputs(initialInputs);
       
     } catch (err) {
-      setError('데이터를 불러오는 중 오류가 발생했습니다.');
       console.error('Error loading data:', err);
+      setError(`데이터를 불러오는 중 오류가 발생했습니다: ${err.message}`);
     } finally {
       setLoading(false);
     }
@@ -75,20 +80,15 @@ const ProductManagementPage = () => {
     try {
       setSaving(prev => ({ ...prev, [brandId]: true }));
       
-      // 해당 브랜드의 카테고리들 찾기
-      const brandCategory = brandCategories.find(bc => bc.brandId === brandId);
-      if (!brandCategory) return;
-      
       // 저장할 상품 데이터 준비
       const productsToSave = [];
-      brandCategory.categoryProducts?.forEach(categoryProduct => {
-        const categoryId = categoryProduct.category?.id;
-        const key = `${brandId}-${categoryId}`;
+      categories.forEach(category => {
+        const key = `${brandId}-${category.id}`;
         const input = productInputs[key];
         
         if (input && input.price) {
           productsToSave.push({
-            categoryId: categoryId,
+            categoryId: category.id,
             price: parseFloat(input.price)
           });
         }
@@ -117,11 +117,14 @@ const ProductManagementPage = () => {
   };
 
   const getCategoryNames = () => {
-    return brandCategories[0]?.categoryProducts?.map(cp => cp.category?.name) || [];
+    return categories?.map(category => category.name) || [];
   };
 
   if (loading) return <div className="loading">데이터를 불러오는 중...</div>;
   if (error) return <div className="error">{error}</div>;
+  if (!categories.length || !brands.length) {
+    return <div className="loading">데이터를 불러오는 중...</div>;
+  }
 
   return (
     <div className="product-management-page">
@@ -155,12 +158,11 @@ const ProductManagementPage = () => {
             </tr>
           </thead>
           <tbody>
-            {brandCategories.map((brandCategory, index) => (
+            {brands.map((brand, index) => (
               <tr key={index}>
-                <td className="brand-name">{brandCategory.brandName}</td>
-                {brandCategory.categoryProducts?.map((categoryProduct, idx) => {
-                  const categoryId = categoryProduct.category?.id;
-                  const key = `${brandCategory.brandId}-${categoryId}`;
+                <td className="brand-name">{brand.name}</td>
+                {categories.map((category, idx) => {
+                  const key = `${brand.id}-${category.id}`;
                   const inputValue = productInputs[key];
                   
                   return (
@@ -171,8 +173,8 @@ const ProductManagementPage = () => {
                         className="price-input"
                         value={inputValue?.price || ''}
                         onChange={(e) => handleInputChange(
-                          brandCategory.brandId, 
-                          categoryId, 
+                          brand.id, 
+                          category.id, 
                           e.target.value
                         )}
                       />
@@ -182,10 +184,10 @@ const ProductManagementPage = () => {
                 <td className="save-cell">
                   <button
                     className="btn btn-primary"
-                    onClick={() => handleSaveBrand(brandCategory.brandId, brandCategory.brandName)}
-                    disabled={saving[brandCategory.brandId]}
+                    onClick={() => handleSaveBrand(brand.id, brand.name)}
+                    disabled={saving[brand.id]}
                   >
-                    {saving[brandCategory.brandId] ? '저장 중...' : '저장'}
+                    {saving[brand.id] ? '저장 중...' : '저장'}
                   </button>
                 </td>
               </tr>

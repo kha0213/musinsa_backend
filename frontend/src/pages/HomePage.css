@@ -1,135 +1,81 @@
 .home-page {
   max-width: 1200px;
-  margin: 0 auto;
+  margin: 20px auto;
   padding: 20px;
-  font-family: Arial, sans-serif;
 }
 
 .header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
   margin-bottom: 30px;
-  padding-bottom: 20px;
-  border-bottom: 2px solid #eee;
 }
 
-.title-section h1 {
-  color: #333;
-  margin: 0 0 10px 0;
-  font-size: 28px;
-}
-
-.title-section p {
-  color: #666;
-  margin: 0;
-  font-size: 16px;
+.header h1 {
+  margin: 0 0 15px 0;
 }
 
 .header-buttons {
-  display: flex;
-  gap: 10px;
+  margin-top: 10px;
 }
 
 .btn {
-  padding: 10px 20px;
-  border: none;
-  border-radius: 4px;
+  padding: 8px 16px;
+  margin-right: 10px;
+  border: 1px solid #ccc;
+  background: #f9f9f9;
   cursor: pointer;
-  font-size: 14px;
-  transition: background-color 0.3s;
-  text-decoration: none;
 }
 
 .btn-primary {
-  background-color: #007bff;
+  background: #007bff;
   color: white;
-}
-
-.btn-primary:hover {
-  background-color: #0056b3;
+  border-color: #007bff;
 }
 
 .btn-secondary {
-  background-color: #6c757d;
+  background: #6c757d;
   color: white;
-}
-
-.btn-secondary:hover {
-  background-color: #545b62;
+  border-color: #6c757d;
 }
 
 .btn-info {
-  background-color: #17a2b8;
+  background: #17a2b8;
   color: white;
+  border-color: #17a2b8;
 }
 
-.btn-info:hover {
-  background-color: #138496;
+.btn:hover {
+  opacity: 0.8;
 }
 
 .table-container {
-  overflow-x: auto;
   margin-bottom: 30px;
 }
 
 .brand-table {
   width: 100%;
   border-collapse: collapse;
-  background: white;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  border: 1px solid #ddd;
 }
 
 .brand-table th,
 .brand-table td {
-  padding: 12px;
-  text-align: center;
+  padding: 10px;
+  text-align: left;
   border: 1px solid #ddd;
 }
 
 .brand-table th {
-  background-color: #f8f9fa;
-  font-weight: bold;
-  color: #333;
-}
-
-.brand-name {
-  font-weight: bold;
   background-color: #f5f5f5;
-}
-
-.price-cell {
-  font-family: 'Courier New', monospace;
+  font-weight: bold;
 }
 
 .loading {
   text-align: center;
   padding: 50px;
-  font-size: 18px;
-  color: #666;
 }
 
 .error {
-  text-align: center;
-  padding: 50px;
-  font-size: 18px;
-  color: #d32f2f;
-}
-
-/* 반응형 디자인 */
-@media (max-width: 768px) {
-  .header {
-    flex-direction: column;
-    gap: 15px;
-    align-items: flex-start;
-  }
-  
-  .header-buttons {
-    width: 100%;
-    justify-content: flex-end;
-  }
-  
-  .title-section h1 {
-    font-size: 24px;
-  }
+  color: red;
+  padding: 20px;
+  border: 1px solid red;
+  background: #ffe6e6;
 }

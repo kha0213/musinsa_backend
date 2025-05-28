@@ -59,6 +59,12 @@ const HomePage = () => {
           >
             카테고리별 최저가 조회
           </button>
+          <button 
+            className="btn btn-success"
+            onClick={() => navigate('/brand-low-price')}
+          >
+            단일 브랜드 최저가 조회
+          </button>
         </div>
       </div>
       

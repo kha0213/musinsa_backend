@@ -43,8 +43,8 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                         product.price
                 ))
                 .from(product)
-                .join(product.category, category)
-                .join(product.brand, brand)
+                .leftJoin(product.category, category)
+                .leftJoin(product.brand, brand)
                 .where(product.price.eq(minPriceSubQuery))
                 .fetch();
     }
@@ -52,10 +52,11 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
     @Override
     public Brand findLowestBrand() {
         return queryFactory
-                .selectFrom(brand)
+                .select(product.brand)
+                .from(product)
                 .join(product.category, category)
                 .join(product.brand, brand)
-                .groupBy(product.brand.id)
+                .groupBy(product.brand)
                 .orderBy(product.price.sum().asc())
                 .limit(1)
                 .fetchOne();

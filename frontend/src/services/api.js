@@ -57,7 +57,11 @@ export const productService = {
     
   // 카테고리별 최저가격 브랜드와 상품가격 조회
   getCategoryLowPriceBrands: () =>
-    api.get('/products/category/brand-low-price'),
+    api.get('/products/lowest-by-category'),
+    
+  // 단일 브랜드로 모든 카테고리 구매 시 최저가 브랜드 조회
+  getLowestBrandTotal: () =>
+    api.get('/products/lowest-brand-total'),
 };
 
 export const categoryService = {

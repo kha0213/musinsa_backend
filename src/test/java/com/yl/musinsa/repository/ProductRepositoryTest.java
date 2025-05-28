@@ -1,5 +1,6 @@
 package com.yl.musinsa.repository;
 
+import com.yl.musinsa.config.TestQueryDslConfig;
 import com.yl.musinsa.dto.BrandPriceDto;
 import com.yl.musinsa.dto.LowPriceByCategoryDto;
 import com.yl.musinsa.entity.Brand;
@@ -11,6 +12,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.context.annotation.Import;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -18,6 +21,8 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
+@Import(TestQueryDslConfig.class)
+@EnableJpaAuditing
 class ProductRepositoryTest {
 
     @Autowired

@@ -1,16 +1,20 @@
 package com.yl.musinsa.controller;
 
+import com.yl.musinsa.dto.CategoryPriceRangeResponse;
 import com.yl.musinsa.dto.LowPriceByBrandResponse;
 import com.yl.musinsa.dto.LowPriceByCategoryDto;
 import com.yl.musinsa.dto.LowPriceByCategoryResponse;
 import com.yl.musinsa.dto.ProductSaveRequest;
 import com.yl.musinsa.service.ProductService;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
@@ -50,6 +54,14 @@ public class ProductController {
     @GetMapping("/lowest-brand-total")
     public LowPriceByBrandResponse getLowestBrandTotal() {
         return productService.findByLowestBrandTotal();
+    }
+
+    /**
+     * 카테고리 이름으로 최저, 최고 가격 브랜드와 상품 가격을 조회하는 API
+     */
+    @GetMapping("/category/price-range")
+    public CategoryPriceRangeResponse getCategoryPriceRange(@RequestParam @Valid @NotBlank String categoryName) {
+        return productService.findCategoryPriceRange(categoryName);
     }
 
 }

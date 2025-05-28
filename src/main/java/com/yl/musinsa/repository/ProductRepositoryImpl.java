@@ -4,6 +4,7 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.yl.musinsa.dto.BrandPriceDto;
 import com.yl.musinsa.dto.LowPriceByCategoryDto;
 import com.yl.musinsa.entity.Brand;
 import com.yl.musinsa.entity.QProduct;
@@ -25,7 +26,6 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
     /**
      * 각 카테고리별 최소 금액 가진 브랜드의 상품을 찾는 메서드
      */
-    @Override
     public List<LowPriceByCategoryDto> findByLowestPriceCategory() {
         QProduct subProduct = new QProduct("subProduct");
         JPQLQuery<BigDecimal> minPriceSubQuery = JPAExpressions
@@ -43,22 +43,71 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                         product.price
                 ))
                 .from(product)
-                .leftJoin(product.category, category)
-                .leftJoin(product.brand, brand)
+                .join(product.category, category)
+                .join(product.brand, brand)
                 .where(product.price.eq(minPriceSubQuery))
                 .fetch();
     }
 
-    @Override
+    /**
+     * 단일 브랜드로 모든 카테고리 구매 시 총합이 가장 저렴한 브랜드 찾기
+     */
     public Brand findLowestBrand() {
-        return queryFactory
-                .select(product.brand)
+        Long brandId = queryFactory
+                .select(product.brand.id)
                 .from(product)
-                .join(product.category, category)
-                .join(product.brand, brand)
-                .groupBy(product.brand)
+                .groupBy(product.brand.id)
                 .orderBy(product.price.sum().asc())
                 .limit(1)
                 .fetchOne();
+
+        return queryFactory
+                .selectFrom(brand)
+                .where(brand.id.eq(brandId))
+                .fetchOne();
+    }
+
+    /**
+     * 특정 카테고리에서 최저가격 브랜드들 조회
+     */
+    public List<BrandPriceDto> findLowestPriceByCategory(Long categoryId) {
+        BigDecimal minPrice = queryFactory
+                .select(product.price.min())
+                .from(product)
+                .where(product.category.id.eq(categoryId))
+                .fetchOne();
+
+        return queryFactory
+                .select(Projections.constructor(BrandPriceDto.class,
+                        product.brand.name,
+                        product.price
+                ))
+                .from(product)
+                .join(product.brand, brand)
+                .where(product.category.id.eq(categoryId)
+                        .and(product.price.eq(minPrice)))
+                .fetch();
+    }
+
+    /**
+     * 특정 카테고리에서 최고가격 브랜드들 조회
+     */
+    public List<BrandPriceDto> findHighestPriceByCategory(Long categoryId) {
+        BigDecimal maxPrice = queryFactory
+                .select(product.price.max())
+                .from(product)
+                .where(product.category.id.eq(categoryId))
+                .fetchOne();
+
+        return queryFactory
+                .select(Projections.constructor(BrandPriceDto.class,
+                        product.brand.name,
+                        product.price
+                ))
+                .from(product)
+                .join(product.brand, brand)
+                .where(product.category.id.eq(categoryId)
+                        .and(product.price.eq(maxPrice)))
+                .fetch();
     }
 }

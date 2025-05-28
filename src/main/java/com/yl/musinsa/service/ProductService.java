@@ -2,6 +2,8 @@ package com.yl.musinsa.service;
 
 import com.yl.musinsa.dto.BrandCategoryResponse;
 import com.yl.musinsa.dto.BrandDto;
+import com.yl.musinsa.dto.BrandPriceDto;
+import com.yl.musinsa.dto.CategoryPriceRangeResponse;
 import com.yl.musinsa.dto.CategoryProduct;
 import com.yl.musinsa.dto.LowPriceByBrandResponse;
 import com.yl.musinsa.dto.LowPriceByCategoryDto;
@@ -32,11 +34,7 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final BrandRepository brandRepository;
     private final CategoryRepository categoryRepository;
-    private final CategoryService categoryService;
 
-    /**
-     * 카테고리별 상품 조회
-     */
     public List<BrandCategoryResponse> findAllBrandCategory() {
         List<Brand> brands = brandRepository.findAll();
         List<Product> products = productRepository.findByBrandInOrderByBrand_NameAsc(brands);
@@ -49,9 +47,6 @@ public class ProductService {
                 .toList();
     }
     
-    /**
-     * 브랜드별 상품 일괄 저장/수정
-     */
     @Transactional
     public void saveProductsByBrand(Long brandId, List<ProductSaveRequest> saveRequests) {
         Brand brand = brandRepository.findById(brandId)
@@ -86,5 +81,15 @@ public class ProductService {
                 .sum(products.stream().map(Product::getPrice).reduce(BigDecimal.ZERO, BigDecimal::add))
                 .categoryProducts(products.stream().map(CategoryProduct::of).toList())
                 .build();
+    }
+
+    public CategoryPriceRangeResponse findCategoryPriceRange(String categoryName) {
+        Category category = categoryRepository.findByName(categoryName)
+                .orElseThrow(() -> new MusinsaException(ErrorCode.CATEGORY_NOT_FOUND));
+        
+        List<BrandPriceDto> lowestPrices = productRepository.findLowestPriceByCategory(category.getId());
+        List<BrandPriceDto> highestPrices = productRepository.findHighestPriceByCategory(category.getId());
+        
+        return new CategoryPriceRangeResponse(categoryName, lowestPrices, highestPrices);
     }
 }

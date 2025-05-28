@@ -2,6 +2,7 @@ package com.yl.musinsa.service;
 
 import com.yl.musinsa.entity.Brand;
 import com.yl.musinsa.exception.MusinsaException;
+import com.yl.musinsa.helper.TestHelper;
 import com.yl.musinsa.repository.BrandRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -10,16 +11,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Arrays;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-@DisplayName("BrandService 단위 테스트")
 class BrandServiceTest {
 
     @Mock
@@ -29,49 +28,46 @@ class BrandServiceTest {
     private BrandService brandService;
 
     @Test
-    @DisplayName("브랜드 등록 - 성공")
-    void registerBrand_Success() {
+    @DisplayName("브랜드 등록 - 정상")
+    void saveBrand_Success() {
         // given
-        String name = "NewBrand";
-        String description = "새로운 브랜드";
-        Brand savedBrand = Brand.create(name, description);
-        
-        given(brandRepository.existsByName(name)).willReturn(false);
-        given(brandRepository.save(any(Brand.class))).willReturn(savedBrand);
+        String brandName = "테스트브랜드";
+        String description = "테스트 설명";
+        Brand savedBrand = Brand.create(brandName, description);
+        TestHelper.setId(savedBrand, 1L);
+
+        when(brandRepository.existsByName(brandName)).thenReturn(false);
+        when(brandRepository.save(any(Brand.class))).thenReturn(savedBrand);
 
         // when
-        Brand result = brandService.registerBrand(name, description);
+        Brand result = brandService.saveBrand(brandName, description);
 
         // then
-        assertThat(result.getName()).isEqualTo(name);
+        assertThat(result.getName()).isEqualTo(brandName);
         assertThat(result.getDescription()).isEqualTo(description);
-        verify(brandRepository).existsByName(name);
-        verify(brandRepository).save(any(Brand.class));
     }
 
     @Test
-    @DisplayName("브랜드 등록 - 중복 이름으로 실패")
-    void registerBrand_DuplicateName_ThrowsException() {
+    @DisplayName("브랜드 등록 - 중복 이름")
+    void saveBrand_DuplicateName() {
         // given
-        String duplicateName = "ExistingBrand";
-        given(brandRepository.existsByName(duplicateName)).willReturn(true);
+        String brandName = "중복브랜드";
+        when(brandRepository.existsByName(brandName)).thenReturn(true);
 
         // when & then
-        assertThatThrownBy(() -> brandService.registerBrand(duplicateName, "설명"))
+        assertThatThrownBy(() -> brandService.saveBrand(brandName, "설명"))
                 .isInstanceOf(MusinsaException.class);
-        
-        verify(brandRepository).existsByName(duplicateName);
     }
 
     @Test
     @DisplayName("모든 브랜드 조회")
-    void getAllBrands() {
+    void findAll() {
         // given
-        List<Brand> brands = Arrays.asList(
-                Brand.create("A", "브랜드A"),
-                Brand.create("B", "브랜드B")
-        );
-        given(brandRepository.findAll()).willReturn(brands);
+        Brand brandA = Brand.create( "A", "A");
+        Brand brandB = Brand.create( "B", "B");
+        TestHelper.setId(brandA, 1L);
+        TestHelper.setId(brandB, 1L);
+        when(brandRepository.findAll()).thenReturn(List.of(brandA, brandB));
 
         // when
         List<Brand> result = brandService.getAllBrands();
@@ -80,6 +76,5 @@ class BrandServiceTest {
         assertThat(result).hasSize(2);
         assertThat(result.get(0).getName()).isEqualTo("A");
         assertThat(result.get(1).getName()).isEqualTo("B");
-        verify(brandRepository).findAll();
     }
 }

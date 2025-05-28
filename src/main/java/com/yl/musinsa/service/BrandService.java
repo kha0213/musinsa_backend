@@ -18,7 +18,7 @@ public class BrandService {
     private final BrandRepository brandRepository;
     
     @Transactional
-    public Brand registerBrand(String name, String description) {
+    public Brand saveBrand(String name, String description) {
         if (brandRepository.existsByName(name)) {
             throw new MusinsaException(ErrorCode.DUPLICATE_NAME);
         }

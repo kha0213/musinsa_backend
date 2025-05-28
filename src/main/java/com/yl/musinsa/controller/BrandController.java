@@ -35,6 +35,6 @@ public class BrandController {
     @PostMapping
     public Brand registerBrand(@RequestParam String name,
                                @RequestParam(required = false) String description) {
-        return brandService.registerBrand(name, description);
+        return brandService.saveBrand(name, description);
     }
 }

@@ -5,6 +5,7 @@ import BrandAdminPage from './pages/BrandAdminPage';
 import ProductManagementPage from './pages/ProductManagementPage';
 import CategoryLowPricePage from './pages/CategoryLowPricePage';
 import BrandLowPricePage from './pages/BrandLowPricePage';
+import CategoryPriceRangePage from './pages/CategoryPriceRangePage';
 import './App.css';
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
           <Route path="/admin/products" element={<ProductManagementPage />} />
           <Route path="/category-low-price" element={<CategoryLowPricePage />} />
           <Route path="/brand-low-price" element={<BrandLowPricePage />} />
+          <Route path="/category-price-range" element={<CategoryPriceRangePage />} />
         </Routes>
       </div>
     </Router>

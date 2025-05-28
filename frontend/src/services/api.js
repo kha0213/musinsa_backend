@@ -62,6 +62,10 @@ export const productService = {
   // 단일 브랜드로 모든 카테고리 구매 시 최저가 브랜드 조회
   getLowestBrandTotal: () =>
     api.get('/products/lowest-brand-total'),
+    
+  // 카테고리별 최저/최고가 브랜드 조회
+  getCategoryPriceRange: (categoryName) =>
+    api.get(`/products/category/price-range?categoryName=${encodeURIComponent(categoryName)}`),
 };
 
 export const categoryService = {

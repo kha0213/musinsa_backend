@@ -64,6 +64,15 @@
   background-color: #1e7e34;
 }
 
+.btn-warning {
+  background-color: #ffc107;
+  color: #212529;
+}
+
+.btn-warning:hover {
+  background-color: #e0a800;
+}
+
 .table-container {
   margin-bottom: 30px;
 }

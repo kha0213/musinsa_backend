@@ -65,6 +65,12 @@ const HomePage = () => {
           >
             단일 브랜드 최저가 조회
           </button>
+          <button 
+            className="btn btn-warning"
+            onClick={() => navigate('/category-price-range')}
+          >
+            카테고리별 가격대 조회
+          </button>
         </div>
       </div>
       

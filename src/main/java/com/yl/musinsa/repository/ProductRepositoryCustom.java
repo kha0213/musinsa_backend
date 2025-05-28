@@ -1,9 +1,12 @@
 package com.yl.musinsa.repository;
 
-import com.yl.musinsa.dto.LowPriceDto;
+import com.yl.musinsa.dto.LowPriceByCategoryDto;
+import com.yl.musinsa.entity.Brand;
 
 import java.util.List;
 
 public interface ProductRepositoryCustom {
-    List<LowPriceDto> findByLowPriceCategoryBrand();
+    List<LowPriceByCategoryDto> findByLowestPriceCategory();
+
+    Brand findLowestBrand();
 }

@@ -3,7 +3,7 @@ package com.yl.musinsa.dto;
 import com.yl.musinsa.entity.Product;
 import lombok.Value;
 
-@Value(staticConstructor = "of")
+@Value
 public class CategoryProduct {
     CategoryDto category;
     ProductDto product;

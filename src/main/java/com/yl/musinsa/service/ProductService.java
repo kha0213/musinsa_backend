@@ -1,7 +1,10 @@
 package com.yl.musinsa.service;
 
 import com.yl.musinsa.dto.BrandCategoryResponse;
-import com.yl.musinsa.dto.LowPriceDto;
+import com.yl.musinsa.dto.BrandDto;
+import com.yl.musinsa.dto.CategoryProduct;
+import com.yl.musinsa.dto.LowPriceByBrandResponse;
+import com.yl.musinsa.dto.LowPriceByCategoryDto;
 import com.yl.musinsa.dto.ProductSaveRequest;
 import com.yl.musinsa.entity.Brand;
 import com.yl.musinsa.entity.Category;
@@ -15,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -70,7 +74,17 @@ public class ProductService {
         }
     }
 
-    public List<LowPriceDto> findByLowPriceCategoryBrand() {
-        return productRepository.findByLowPriceCategoryBrand();
+    public List<LowPriceByCategoryDto> findByLowestPriceCategory() {
+        return productRepository.findByLowestPriceCategory();
+    }
+
+    public LowPriceByBrandResponse findByLowestBrandTotal() {
+        Brand brand = productRepository.findLowestBrand();
+        List<Product> products = productRepository.findByBrand(brand);
+        return LowPriceByBrandResponse.builder()
+                .brand(BrandDto.of(brand))
+                .sum(products.stream().map(Product::getPrice).reduce(BigDecimal.ZERO, BigDecimal::add))
+                .categoryProducts(products.stream().map(CategoryProduct::of).toList())
+                .build();
     }
 }

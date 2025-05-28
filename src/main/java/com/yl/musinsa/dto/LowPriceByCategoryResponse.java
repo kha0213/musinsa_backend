@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 @Value
-public class LowPriceResponse {
-    List<LowPriceDto> categoryLowPrices;
+public class LowPriceByCategoryResponse {
+    List<LowPriceByCategoryDto> categoryLowPrices;
     BigDecimal totalPrice;
 }

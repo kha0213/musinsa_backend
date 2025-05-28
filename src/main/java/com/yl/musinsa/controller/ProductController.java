@@ -1,7 +1,8 @@
 package com.yl.musinsa.controller;
 
-import com.yl.musinsa.dto.LowPriceDto;
-import com.yl.musinsa.dto.LowPriceResponse;
+import com.yl.musinsa.dto.LowPriceByBrandResponse;
+import com.yl.musinsa.dto.LowPriceByCategoryDto;
+import com.yl.musinsa.dto.LowPriceByCategoryResponse;
 import com.yl.musinsa.dto.ProductSaveRequest;
 import com.yl.musinsa.service.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -36,11 +37,19 @@ public class ProductController {
     /**
      * 모든 카테고리에서 가장 저렴한 브랜드의 상품 가져오기 
      */
-    @GetMapping("/category/brand-low-price")
-    public LowPriceResponse getLowPriceBrand() {
-        List<LowPriceDto> list = productService.findByLowPriceCategoryBrand();
-        BigDecimal sum = list.stream().map(LowPriceDto::getPrice).reduce(BigDecimal.ZERO, BigDecimal::add);
-        return new LowPriceResponse(list, sum);
+    @GetMapping("/lowest-by-category")
+    public LowPriceByCategoryResponse getLowestPriceByCategory() {
+        List<LowPriceByCategoryDto> list = productService.findByLowestPriceCategory();
+        BigDecimal sum = list.stream().map(LowPriceByCategoryDto::getPrice).reduce(BigDecimal.ZERO, BigDecimal::add);
+        return new LowPriceByCategoryResponse(list, sum);
+    }
+
+    /**
+     * 단일 브랜드로 모두 살 때 가장 저렴한 브랜드의 상품들 가져오기
+     */
+    @GetMapping("/lowest-brand-total")
+    public LowPriceByBrandResponse getLowestBrandTotal() {
+        return productService.findByLowestBrandTotal();
     }
 
 }

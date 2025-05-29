@@ -2,10 +2,19 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.4.6'
     id 'io.spring.dependency-management' version '1.1.7'
+    id 'com.github.node-gradle.node' version '7.0.2'
 }
 
 group = 'com.yl'
 version = '0.0.1-SNAPSHOT'
+
+node {
+    version = '18.17.1'           // 원하는 Node.js 버전
+    yarnVersion = '1.22.22'       // 원하는 Yarn 버전
+    download = true               // 로컬에 Node/Yarn 설치해 사용
+    workDir = file("${project.buildDir}/nodejs")
+    yarnWorkDir = file("${project.buildDir}/yarn")
+}
 
 java {
     toolchain {
@@ -70,22 +79,10 @@ clean {
     delete file('frontend/build') // React 빌드 폴더도 삭제
 }
 
-// React 빌드 태스크들
-task installDependencies(type: Exec) {
-    workingDir 'frontend'
-    commandLine 'yarn', 'install'
-}
-
-task buildFrontend(type: Exec) {
-    dependsOn installDependencies
-    workingDir 'frontend'
-    commandLine 'yarn', 'build'
-}
-
-// 개발용: 프론트엔드 개발 서버 시작
-task startFrontend(type: Exec) {
-    workingDir 'frontend'
-    commandLine 'yarn', 'start'
+task buildFrontend(type: YarnTask) {
+    dependsOn yarn_install
+    args = ['build']
+    workingDir = file('frontend') // 여기가 중요
 }
 
 task copyFrontend(type: Copy) {
@@ -94,5 +91,5 @@ task copyFrontend(type: Copy) {
     into 'src/main/resources/static'
 }
 
-// 빌드 시 프론트엔드 포함
+processResources.dependsOn copyFrontend
 build.dependsOn copyFrontend

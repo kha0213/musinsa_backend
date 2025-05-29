@@ -28,15 +28,9 @@ export const brandService = {
   
   // 브랜드 등록
   createBrand: (data) => {
-    const formData = new FormData();
-    formData.append('name', data.name);
-    if (data.description) {
-      formData.append('description', data.description);
-    }
-    return api.post('/brands', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
+    return api.post('/brands', {
+      name: data.name,
+      description: data.description || null
     });
   },
 };

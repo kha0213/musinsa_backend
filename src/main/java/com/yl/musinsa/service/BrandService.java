@@ -30,6 +30,13 @@ public class BrandService {
     /**
      * 모든 브랜드 조회
      */
+    public List<Brand> findAll() {
+        return brandRepository.findAll();
+    }
+    
+    /**
+     * 모든 브랜드 조회 (별칭)
+     */
     public List<Brand> getAllBrands() {
         return brandRepository.findAll();
     }

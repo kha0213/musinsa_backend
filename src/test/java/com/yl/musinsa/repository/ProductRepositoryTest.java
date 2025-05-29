@@ -9,44 +9,52 @@ import com.yl.musinsa.entity.Product;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.context.annotation.Import;
-import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.math.BigDecimal;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@ActiveProfiles("test")
 @DataJpaTest
 @Import(TestQueryDslConfig.class)
-@EnableJpaAuditing
 class ProductRepositoryTest {
 
     @Autowired
-    private TestEntityManager entityManager;
-
-    @Autowired
     private ProductRepository productRepository;
+    @Autowired
+    private BrandRepository brandRepository;
+    @Autowired
+    private CategoryRepository categoryRepository;
 
     private Brand brandA, brandB;
     private Category category1, category2;
 
     @BeforeEach
     void setUp() {
+        productRepository.deleteAll();
+        brandRepository.deleteAll();
+        categoryRepository.deleteAll();
+
+        brandRepository = Mockito.mock(BrandRepository.class);
+        brandRepository = Mockito.mock(BrandRepository.class);
+
         // 브랜드 생성
         brandA = Brand.create("A", "브랜드 A");
         brandB = Brand.create("B", "브랜드 B");
-        entityManager.persist(brandA);
-        entityManager.persist(brandB);
+        brandRepository.save(brandA);
+        brandRepository.save(brandB);
 
         // 카테고리 생성
         category1 = Category.create("상의");
         category2 = Category.create("아우터");
-        entityManager.persist(category1);
-        entityManager.persist(category2);
+        categoryRepository.save(category1);
+        categoryRepository.save(category2);
 
         // 상품 생성
         Product product1 = Product.create(brandA, category1, new BigDecimal("10000"));
@@ -54,11 +62,10 @@ class ProductRepositoryTest {
         Product product3 = Product.create(brandA, category2, new BigDecimal("5000"));
         Product product4 = Product.create(brandB, category2, new BigDecimal("4000"));
 
-        entityManager.persist(product1);
-        entityManager.persist(product2);
-        entityManager.persist(product3);
-        entityManager.persist(product4);
-        entityManager.flush();
+        productRepository.save(product1);
+        productRepository.save(product2);
+        productRepository.save(product3);
+        productRepository.save(product4);
     }
 
     @Test

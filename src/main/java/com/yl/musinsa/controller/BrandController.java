@@ -1,14 +1,16 @@
 package com.yl.musinsa.controller;
 
+import com.yl.musinsa.dto.BrandCreateRequest;
 import com.yl.musinsa.entity.Brand;
 import com.yl.musinsa.service.BrandService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.validation.Valid;
 import java.util.List;
 
 /**
@@ -33,8 +35,7 @@ public class BrandController {
      * 브랜드 등록
      */
     @PostMapping
-    public Brand registerBrand(@RequestParam String name,
-                               @RequestParam(required = false) String description) {
-        return brandService.saveBrand(name, description);
+    public Brand registerBrand(@RequestBody @Valid BrandCreateRequest request) {
+        return brandService.saveBrand(request.getName(), request.getDescription());
     }
 }

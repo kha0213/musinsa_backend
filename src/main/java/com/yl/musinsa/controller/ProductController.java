@@ -32,7 +32,7 @@ public class ProductController {
     @PostMapping("/brand/{brandId}")
     public String saveProductsByBrand(
             @PathVariable Long brandId,
-            @RequestBody List<ProductSaveRequest> products) {
+            @RequestBody @Valid List<ProductSaveRequest> products) {
         
         productService.saveProductsByBrand(brandId, products);
         return "상품이 성공적으로 저장되었습니다.";

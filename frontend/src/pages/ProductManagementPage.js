@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { brandService, productService, homeService, categoryService } from '../services/api';
+import React, {useEffect, useState} from 'react';
+import {useNavigate} from 'react-router-dom';
+import {brandService, categoryService, homeService, productService} from '../services/api';
 import './ProductManagementPage.css';
 
 const ProductManagementPage = () => {
@@ -105,8 +105,7 @@ const ProductManagementPage = () => {
       }
       
     } catch (err) {
-      console.error('Error saving products:', err);
-      alert('상품 저장 중 오류가 발생했습니다.');
+      alert(err);
     } finally {
       setSaving(prev => ({ ...prev, [brandId]: false }));
     }
